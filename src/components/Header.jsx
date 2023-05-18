@@ -1,6 +1,7 @@
 import { NavLink } from "react-router-dom"
+import PropTypes from 'prop-types'
 
-function Header(){
+function Header({isLogged}){
     return (
         <nav className="main-nav">
             <NavLink to="/" className="main-nav-logo">
@@ -8,9 +9,20 @@ function Header(){
                 <h1 className="sr-only">Argent Bank</h1>
             </NavLink>
             <div>
-                <NavLink to="/signin" className="main-nav-item">
-                    <i className="fa fa-user-circle"></i> Sign In
-                </ NavLink>
+                {isLogged ? 
+                    <div>
+                        <NavLink to="/user" className="main-nav-item">
+                            <i className="fa fa-user-circle"></i> Tony
+                        </NavLink>
+                        <NavLink to="/" className="main-nav-item">
+                            <i className="fa fa-sign-out"></i> Sign Out
+                        </NavLink>
+                    </div>
+                 :
+                    <NavLink to="/signin" className="main-nav-item">
+                        <i className="fa fa-user-circle"></i> Sign In
+                    </ NavLink>
+                 }
             </div>
         </nav>
     )
@@ -18,3 +30,7 @@ function Header(){
 }
 
 export default Header
+
+Header.propTypes = {
+    isLogged: PropTypes.bool,
+  }

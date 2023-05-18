@@ -1,11 +1,12 @@
 import { NavLink } from "react-router-dom"
+import PropTypes from 'prop-types'
 import Header from "../components/Header"
 import Footer from "../components/Footer"
 
-function SignIn(){
+function SignIn({isLogged}){
     return(        
         <div className="root-wrapper">
-            <Header />
+            <Header isLogged={isLogged}/>
             <main className="main bg-dark">
                 <section className="sign-in-content">
                     <i className="fa fa-user-circle sign-in-icon"></i>
@@ -33,3 +34,7 @@ function SignIn(){
         )
 }
 export default SignIn
+
+SignIn.propTypes = {
+    isLogged: PropTypes.bool,
+  }
