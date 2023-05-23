@@ -5,6 +5,7 @@ import Home from './pages/Home'
 import SignIn from './pages/SignIn'
 import User from './pages/User'
 import Error404 from './pages/Error404'
+import SiteTitle from './components/SiteTitle'
 
 function App() {
 
@@ -13,6 +14,7 @@ function App() {
 
   return (
     <BrowserRouter>
+      <SiteTitle/>
       <Routes>
         <Route path="/" element={<Home isLogged={isLogged}/>}/>
         <Route path="/signin" element={<SignIn isLogged={isLogged}/>}/>
