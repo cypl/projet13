@@ -1,16 +1,24 @@
 import { useState, useEffect } from "react"
+import { useNavigate } from "react-router"
 import PropTypes from 'prop-types'
 import Header from "../components/Header"
 import Footer from "../components/Footer"
 import { useFetch } from "../api"
 
 function SignIn({isLogged, setLogged}){
+
     const[loginEmail, setLoginEmail] = useState('')
     const[loginPassword, setLoginPassword] = useState('')
     const[loginRemember, setLoginRemember] = useState(false)
     const[loginData, setLoginData] = useState()
     const[errorData, setErrorData] = useState(null)
+    
+    // if user is already logged, redirect to "/user" page
+    const navigate = useNavigate()
+    useEffect(() => {
+    isLogged && navigate("/user")},[isLogged, navigate])
 
+    
     const { FetchLoginUser, data, isError } = useFetch() 
     const [isDataLoaded, setDataLoaded] = useState(false)
 
@@ -47,14 +55,18 @@ function SignIn({isLogged, setLogged}){
             data.token && setLogged(true)
             // S'il y a un token, on mémorise la connexion de l'utilisateur
             data.token && populateStorage(loginEmail,loginData)
-            // S'il y a un token enregistré on peut alors redirigé vers la page User.jsx
-            //
+            // S'il y a un token, on redirige vers la page user
+            isLogged && navigate("/user")
+            // S'il n'y a pas de token et une d'erreur ?
             console.log(errorData)
         }
-      }, [isDataLoaded, data, isError, setLogged, loginRemember, loginEmail, loginData, errorData])
+      }, [isDataLoaded, data, isError, setLogged, loginRemember, loginEmail, loginData, errorData, navigate, isLogged])
 
+      
 
-    return(        
+    return( 
+        <> 
+        {!isLogged &&      
         <div className="root-wrapper">
             <Header isLogged={isLogged}/>
             <main className="main bg-dark">
@@ -80,6 +92,8 @@ function SignIn({isLogged, setLogged}){
                 </main>
             <Footer />
         </div>
+        }
+        </>
         )
 }
 export default SignIn
