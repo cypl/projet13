@@ -1,8 +1,15 @@
+import { useEffect } from 'react'
+import { useNavigate } from "react-router"
 import PropTypes from 'prop-types'
 import Header from "../components/Header"
 import Footer from "../components/Footer"
 
 function User({isLogged}){
+    // if user is not logged, redirect to "/signin" page
+    const navigate = useNavigate()
+    useEffect(() => {
+    !isLogged && navigate("/signin")},[isLogged, navigate])
+
     const accounts = [
         {
             name: "Argent Bank Checking (x8349)",
