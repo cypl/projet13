@@ -5,17 +5,17 @@ export const AuthContext = createContext()
 
 export const AuthProvider = ({ children }) => {
     const [isLogged, setLogged] = useState(false)
-    const authStorageSession = sessionStorage.getItem('authStorage')
-    const authStorageLocal = localStorage.getItem('authStorage')
-    if((authStorageSession != null) || (authStorageLocal != null)){
+    const authSession = sessionStorage.getItem('auth')
+    const authLocal = localStorage.getItem('auth')
+    if((authSession != null) || (authLocal != null)){
         console.log("l'utilisateur est connecté")
         !isLogged && setLogged(true)
     }
     
     function logout(){
         isLogged && setLogged(false)
-        authStorageSession != null && sessionStorage.removeItem('authStorage')
-        authStorageLocal != null && localStorage.removeItem('authStorage')
+        authSession != null && sessionStorage.removeItem('auth')
+        authLocal != null && localStorage.removeItem('auth')
     }
     return (
         <AuthContext.Provider

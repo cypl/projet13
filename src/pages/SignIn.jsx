@@ -45,8 +45,8 @@ function SignIn(){
         function populateStorage(loginEmail, loginData) {
             const authStorage = JSON.stringify({email: loginEmail, jwt: loginData})
             loginRemember ? 
-                localStorage.setItem('authStorage', authStorage) : 
-                sessionStorage.setItem('authStorage', authStorage)
+                localStorage.setItem('auth', authStorage) : 
+                sessionStorage.setItem('auth', authStorage)
         }
         function showError(errorData){
             if(errorData.status === 400){setErrorMessage("Username and/or password are invalid.")}
