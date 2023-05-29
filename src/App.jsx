@@ -9,15 +9,19 @@ import SiteTitle from './components/SiteTitle'
 
 function App() {
 
-  // eslint-disable-next-line no-unused-vars
   const [isLogged, setLogged] = useState(false)
+  const authStorageSession = sessionStorage.getItem('authStorage')
+  const authStorageLocal = localStorage.getItem('authStorage')
+  if((authStorageSession != null) || (authStorageLocal != null)){
+    console.log("connexion en cours")
+  }
 
   return (
     <BrowserRouter>
       <SiteTitle/>
       <Routes>
         <Route path="/" element={<Home isLogged={isLogged}/>}/>
-        <Route path="/signin" element={<SignIn isLogged={isLogged}/>}/>
+        <Route path="/signin" element={<SignIn isLogged={isLogged} setLogged={setLogged}/>}/>
         <Route path="/user" element={<User isLogged={isLogged}/>}/>
         <Route path="*" element={<Error404/>}/>
       </Routes>

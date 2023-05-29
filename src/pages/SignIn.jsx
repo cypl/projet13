@@ -1,9 +1,56 @@
-import { NavLink } from "react-router-dom"
+import { useState, useEffect } from "react"
 import PropTypes from 'prop-types'
 import Header from "../components/Header"
 import Footer from "../components/Footer"
+//import { API } from "../api"
+import { useFetch } from "../api"
 
-function SignIn({isLogged}){
+function SignIn({isLogged, setLogged}){
+    const[loginEmail, setLoginEmail] = useState('')
+    const[loginPassword, setLoginPassword] = useState('')
+    const[loginRemember, setLoginRemember] = useState(false)
+    const[loginData, setLoginData] = useState()
+    const[errorData, setErrorData] = useState(null)
+
+    const { FetchLoginUser, data, isError } = useFetch() 
+    const [isDataLoaded, setDataLoaded] = useState(false)
+
+    function handleLoginEmail(event){
+        setLoginEmail(event.target.value)
+    }
+    function handleLoginPassword(event){
+        setLoginPassword(event.target.value)
+    }
+    function handleLoginRemember(){
+        setLoginRemember(!loginRemember)
+    }
+    async function handleLoginSubmit(event){
+        event.preventDefault()
+        await FetchLoginUser(loginEmail, loginPassword)
+        setDataLoaded(true)
+    }
+
+    
+    
+    
+      
+    useEffect(() => {
+        
+        if (isDataLoaded) { // Lorsque les données sont chargées,
+            // On enregistre le statut de l'erreur
+            setErrorData(isError)
+            // S'il y a un token, on le stocke
+            data.token && setLoginData(data.token)
+            // S'il y a un token, on change le statut de connexion de l'utilisateur
+            data.token && setLogged(true)
+            // S'il y a un token, on mémorise la connexion de l'utilisateur
+            // S'il y a un token enregistré on peut alors redirigé vers la page User.jsx
+            //
+            console.log(errorData)
+        }
+      }, [isDataLoaded, data, isError, setLogged, loginRemember, loginEmail, loginData, errorData])
+
+
     return(        
         <div className="root-wrapper">
             <Header isLogged={isLogged}/>
@@ -11,21 +58,20 @@ function SignIn({isLogged}){
                 <section className="sign-in-content">
                     <i className="fa fa-user-circle sign-in-icon"></i>
                     <h1>Sign In</h1>
-                    <form>
+                    <form onSubmit={handleLoginSubmit}>
                     <div className="input-wrapper">
-                        <label htmlFor="username">Username</label><input type="text" id="username" />
+                        <label htmlFor="username">Username</label>
+                        <input type="text" id="username" value={loginEmail} onChange={handleLoginEmail}/>
                     </div>
                     <div className="input-wrapper">
-                        <label htmlFor="password">Password</label><input type="password" id="password" />
+                        <label htmlFor="password">Password</label>
+                        <input type="password" id="password" value={loginPassword} onChange={handleLoginPassword}/>
                     </div>
                     <div className="input-remember">
-                        <input type="checkbox" id="remember-me" /><label htmlFor="remember-me">Remember me</label>
+                        <input type="checkbox" id="remember-me" checked={loginRemember} onChange={handleLoginRemember}/>
+                        <label htmlFor="remember-me">Remember me</label>
                     </div>
-                    {/* PLACEHOLDER DUE TO STATIC SITE */}
-                    <NavLink to="/user" className="sign-in-button">Sign In</NavLink>
-                    {/* SHOULD BE THE BUTTON BELOW
-                    <!-- <button className="sign-in-button">Sign In</button> -->
-                     */}
+                     <button className="sign-in-button">Sign In</button>
                     </form>
                 </section>
                 </main>
@@ -37,4 +83,5 @@ export default SignIn
 
 SignIn.propTypes = {
     isLogged: PropTypes.bool,
+    setLogged: PropTypes.func,
   }
