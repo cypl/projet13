@@ -40,7 +40,7 @@ export const loginPath = `${ENV}/user/login`
 
 
 
-export function useFetch(email, password) {
+export function useFetchLoginUser() {
     const [data, setData] = useState({});
     const [isError, setError] = useState();
   
@@ -50,14 +50,14 @@ export function useFetch(email, password) {
           email,
           password,
         });
-        setData(response.data.body);
-        setError(null);
+        setData(response.data.body)
+        setError(null)
       } catch (error) {
-        setError(error.message);
+        setError(error.response)
       }
     }
   
-    return { FetchLoginUser, data, isError };
+    return { FetchLoginUser, data, isError }
   }
 
   

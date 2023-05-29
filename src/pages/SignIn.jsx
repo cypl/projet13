@@ -3,25 +3,26 @@ import { useNavigate } from "react-router"
 import PropTypes from 'prop-types'
 import Header from "../components/Header"
 import Footer from "../components/Footer"
-import { useFetch } from "../api"
+import { useFetchLoginUser } from "../api"
 
 function SignIn({isLogged, setLogged}){
+    const { FetchLoginUser, data, isError } = useFetchLoginUser()
 
     const[loginEmail, setLoginEmail] = useState('')
     const[loginPassword, setLoginPassword] = useState('')
     const[loginRemember, setLoginRemember] = useState(false)
-    const[loginData, setLoginData] = useState()
+
+    const [isDataLoaded, setDataLoaded] = useState(false)
+    const[loginData, setLoginData] = useState() // = JSON Web Token
     const[errorData, setErrorData] = useState(null)
+    const[errorMessage, setErrorMessage] = useState("")
     
     // if user is already logged, redirect to "/user" page
     const navigate = useNavigate()
     useEffect(() => {
     isLogged && navigate("/user")},[isLogged, navigate])
 
-    
-    const { FetchLoginUser, data, isError } = useFetch() 
-    const [isDataLoaded, setDataLoaded] = useState(false)
-
+    // form input functions
     function handleLoginEmail(event){
         setLoginEmail(event.target.value)
     }
@@ -33,11 +34,10 @@ function SignIn({isLogged, setLogged}){
     }
     async function handleLoginSubmit(event){
         event.preventDefault()
-        await FetchLoginUser(loginEmail, loginPassword)
-        setDataLoaded(true)
+        await FetchLoginUser(loginEmail, loginPassword) // = API call
+        setDataLoaded(true) // when FetchLoginUser is finished, data are loaded
     }
 
-    
       
     useEffect(() => {
         function populateStorage(loginEmail, loginData) {
@@ -46,23 +46,28 @@ function SignIn({isLogged, setLogged}){
                 localStorage.setItem('authStorage', authStorage) : 
                 sessionStorage.setItem('authStorage', authStorage)
         }
-        if (isDataLoaded) { // Lorsque les données sont chargées,
-            // On enregistre le statut de l'erreur
+        function showError(errorData){
+            if(errorData.status === 400){setErrorMessage("Username and/or password are invalid.")}
+            else if(errorData.status === 404){setErrorMessage("Error connecting server.")}
+            else if(errorData.status === 500){setErrorMessage("Internal Server Error.")}
+            else{setErrorMessage("An error occured. Please, contact the support.")}
+        }
+        if (isDataLoaded) { // when FetchLoginUser is finished
+            // save error response (will be "null" if connection is OK)
             setErrorData(isError)
-            // S'il y a un token, on le stocke
+            // if connection successful, token is stored in loginData state
             data.token && setLoginData(data.token)
-            // S'il y a un token, on change le statut de connexion de l'utilisateur
+            // if connection successful, user status changes
             data.token && setLogged(true)
-            // S'il y a un token, on mémorise la connexion de l'utilisateur
+            // if connection successful, user connection is stored (localStorage or sessionStorage)
             data.token && populateStorage(loginEmail,loginData)
-            // S'il y a un token, on redirige vers la page user
+            // if connection successful, user is redirected to "user" page
             isLogged && navigate("/user")
-            // S'il n'y a pas de token et une d'erreur ?
-            console.log(errorData)
+            // if connection fails, an error pops in
+            errorData != null && showError(errorData)
         }
       }, [isDataLoaded, data, isError, setLogged, loginRemember, loginEmail, loginData, errorData, navigate, isLogged])
 
-      
 
     return( 
         <> 
@@ -73,7 +78,7 @@ function SignIn({isLogged, setLogged}){
                 <section className="sign-in-content">
                     <i className="fa fa-user-circle sign-in-icon"></i>
                     <h1>Sign In</h1>
-                    <form onSubmit={handleLoginSubmit}>
+                    <form className="sign-in-form" onSubmit={handleLoginSubmit}>
                     <div className="input-wrapper">
                         <label htmlFor="username">Username</label>
                         <input type="text" id="username" value={loginEmail} onChange={handleLoginEmail}/>
@@ -87,6 +92,13 @@ function SignIn({isLogged, setLogged}){
                         <label htmlFor="remember-me">Remember me</label>
                     </div>
                      <button className="sign-in-button">Sign In</button>
+                     {errorData != null && 
+                        <p className="sign-in-error-message">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512">
+                                <path d="M182.6 137.4c-12.5-12.5-32.8-12.5-45.3 0l-128 128c-9.2 9.2-11.9 22.9-6.9 34.9s16.6 19.8 29.6 19.8H288c12.9 0 24.6-7.8 29.6-19.8s2.2-25.7-6.9-34.9l-128-128z"/>
+                            </svg>
+                            {errorMessage}
+                        </p>}
                     </form>
                 </section>
                 </main>

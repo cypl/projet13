@@ -162,7 +162,9 @@ flex-direction: column;
     font-weight: bold;
     margin-bottom: 0.5rem;
   }
-  
+  .sign-in-form{
+    position:relative;
+  }
   .sign-in-button {
     display: block;
     width: 100%;
@@ -175,6 +177,27 @@ flex-direction: column;
     color: #fff;
   }
   
+  .sign-in-error-message{
+    box-sizing: border-box;
+    margin:0;
+    position:absolute;
+    bottom:-15px;
+    transform:translate(0,100%);
+    width:100%;
+    background-color:rgb(253, 70, 70);
+    padding:8px;
+    color:#fff;
+  }
+  .sign-in-error-message svg{
+    position: absolute;
+    fill:rgb(253, 70, 70);
+    height:30px;
+    width:auto;
+    top:-15px;
+    left:50%;
+    transform:translate(-50%,0%);
+  }
+
   .sign-in-content {
     box-sizing: border-box;
     background-color: white;
