@@ -1,7 +1,10 @@
 import { NavLink } from "react-router-dom"
-import PropTypes from 'prop-types'
+import { useContext } from "react"
+import { AuthContext } from "../utils/Context"
 
-function Header({isLogged}){
+function Header(){
+    const { isLogged, logout } = useContext(AuthContext)
+
     return (
         <nav className="main-nav">
             <NavLink to="/" className="main-nav-logo">
@@ -14,7 +17,7 @@ function Header({isLogged}){
                         <NavLink to="/user" className="main-nav-item">
                             <i className="fa fa-user-circle"></i> Tony
                         </NavLink>
-                        <NavLink to="/" className="main-nav-item">
+                        <NavLink to="/" className="main-nav-item" onClick={logout}>
                             <i className="fa fa-sign-out"></i> Sign Out
                         </NavLink>
                     </div>
@@ -30,7 +33,3 @@ function Header({isLogged}){
 }
 
 export default Header
-
-Header.propTypes = {
-    isLogged: PropTypes.bool,
-  }

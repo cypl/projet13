@@ -1,10 +1,12 @@
-import { useEffect } from 'react'
+import { useEffect, useContext } from 'react'
+import { AuthContext } from '../utils/Context'
 import { useNavigate } from "react-router"
-import PropTypes from 'prop-types'
 import Header from "../components/Header"
 import Footer from "../components/Footer"
 
-function User({isLogged}){
+function User(){
+    const { isLogged } = useContext(AuthContext)
+
     // if user is not logged, redirect to "/signin" page
     const navigate = useNavigate()
     useEffect(() => {
@@ -57,7 +59,3 @@ function User({isLogged}){
     )
 }
 export default User
-
-User.propTypes = {
-    isLogged: PropTypes.bool,
-  }

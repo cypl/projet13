@@ -1,11 +1,13 @@
-import { useState, useEffect } from "react"
+import { useState, useEffect, useContext } from "react"
+import { AuthContext } from "../utils/Context"
 import { useNavigate } from "react-router"
-import PropTypes from 'prop-types'
 import Header from "../components/Header"
 import Footer from "../components/Footer"
 import { useFetchLoginUser } from "../api"
 
-function SignIn({isLogged, setLogged}){
+function SignIn(){
+    const { isLogged, setLogged } = useContext(AuthContext)
+
     const { FetchLoginUser, data, isError } = useFetchLoginUser()
 
     const[loginEmail, setLoginEmail] = useState('')
@@ -109,8 +111,3 @@ function SignIn({isLogged, setLogged}){
         )
 }
 export default SignIn
-
-SignIn.propTypes = {
-    isLogged: PropTypes.bool,
-    setLogged: PropTypes.func,
-  }
