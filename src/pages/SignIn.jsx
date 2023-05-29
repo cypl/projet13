@@ -2,7 +2,6 @@ import { useState, useEffect } from "react"
 import PropTypes from 'prop-types'
 import Header from "../components/Header"
 import Footer from "../components/Footer"
-//import { API } from "../api"
 import { useFetch } from "../api"
 
 function SignIn({isLogged, setLogged}){
@@ -31,11 +30,14 @@ function SignIn({isLogged, setLogged}){
     }
 
     
-    
-    
       
     useEffect(() => {
-        
+        function populateStorage(loginEmail, loginData) {
+            const authStorage = JSON.stringify({email: loginEmail, jwt: loginData})
+            loginRemember ? 
+                localStorage.setItem('authStorage', authStorage) : 
+                sessionStorage.setItem('authStorage', authStorage)
+        }
         if (isDataLoaded) { // Lorsque les données sont chargées,
             // On enregistre le statut de l'erreur
             setErrorData(isError)
@@ -44,6 +46,7 @@ function SignIn({isLogged, setLogged}){
             // S'il y a un token, on change le statut de connexion de l'utilisateur
             data.token && setLogged(true)
             // S'il y a un token, on mémorise la connexion de l'utilisateur
+            data.token && populateStorage(loginEmail,loginData)
             // S'il y a un token enregistré on peut alors redirigé vers la page User.jsx
             //
             console.log(errorData)
