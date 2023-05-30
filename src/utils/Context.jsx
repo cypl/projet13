@@ -16,6 +16,7 @@ export const AuthProvider = ({ children }) => {
         isLogged && setLogged(false)
         authSession != null && sessionStorage.removeItem('auth')
         authLocal != null && localStorage.removeItem('auth')
+        console.log("l'utilisateur est déconnecté")
     }
     return (
         <AuthContext.Provider
