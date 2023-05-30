@@ -6,7 +6,7 @@ import Footer from "../components/Footer"
 import { useFetchLoginUser } from "../api"
 
 function SignIn(){
-    const { isLogged, setLogged } = useContext(AuthContext)
+    const { isLogged, setLogged, authToken, setAuthToken } = useContext(AuthContext)
 
     const { FetchLoginUser, data, isError } = useFetchLoginUser()
 
@@ -15,7 +15,6 @@ function SignIn(){
     const[loginRemember, setLoginRemember] = useState(false)
 
     const [isDataLoaded, setDataLoaded] = useState(false)
-    const[loginData, setLoginData] = useState() // = JSON Web Token
     const[errorData, setErrorData] = useState(null)
     const[errorMessage, setErrorMessage] = useState("")
     
@@ -57,18 +56,18 @@ function SignIn(){
         if (isDataLoaded) { // when FetchLoginUser is finished
             // save error response (will be "null" if connection is OK)
             setErrorData(isError)
-            // if connection successful, token is stored in loginData state
-            data.token && setLoginData(data.token)
+            // if connection successful, token is stored in context
+            data.token && setAuthToken(data.token)
             // if connection successful, user status changes
             data.token && setLogged(true)
             // if connection successful, user connection is stored (localStorage or sessionStorage)
-            data.token && populateStorage(loginEmail,loginData)
+            data.token && populateStorage(loginEmail,authToken)
             // if connection successful, user is redirected to "user" page
             isLogged && navigate("/user")
             // if connection fails, an error pops in
             errorData != null && showError(errorData)
         }
-      }, [isDataLoaded, data, isError, setLogged, loginRemember, loginEmail, loginData, errorData, navigate, isLogged])
+      }, [isDataLoaded, data, isError, setLogged, loginRemember, loginEmail, errorData, navigate, isLogged, setAuthToken, authToken])
 
 
     return( 

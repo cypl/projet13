@@ -2,7 +2,8 @@ import axios from 'axios'
 import { useState } from 'react'
 
 const ENV = 'http://localhost:3001/api/v1'
-export const loginPath = `${ENV}/user/login`
+const loginPath = `${ENV}/user/login`
+const profilePath = `${ENV}/user/profile`
 
 // const useFetchLogin = (email, password, submitted, setData, setError) => {
 //     useEffect(() => {
@@ -49,7 +50,7 @@ export function useFetchLoginUser() {
         const response = await axios.post(loginPath, {
           email,
           password,
-        });
+        })
         setData(response.data.body)
         setError(null)
       } catch (error) {
@@ -58,6 +59,28 @@ export function useFetchLoginUser() {
     }
   
     return { FetchLoginUser, data, isError }
+  }
+
+
+  export function useFetchUserProfile() {
+    const [data, setData] = useState({});
+    const [isError, setError] = useState();
+  
+    async function FetchUserProfile(token) {
+      try {
+        const response = await axios.post(profilePath, {}, {
+            headers: {
+              'Authorization': `Bearer ${token}` 
+            }
+        })
+        setData(response.data.body)
+        setError(null)
+      } catch (error) {
+        setError(error.response)
+      }
+    }
+  
+    return { FetchUserProfile, data, isError }
   }
 
   
