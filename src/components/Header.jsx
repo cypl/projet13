@@ -1,9 +1,10 @@
 import { NavLink } from "react-router-dom"
 import { useContext } from "react"
-import { AuthContext } from "../utils/Context"
+import { AuthContext, UserContext } from "../utils/Context"
 
 function Header(){
     const { isLogged, logout } = useContext(AuthContext)
+    const { firstName } = useContext(UserContext)
 
     return (
         <nav className="main-nav">
@@ -15,7 +16,7 @@ function Header(){
                 {isLogged ? 
                     <div>
                         <NavLink to="/user" className="main-nav-item">
-                            <i className="fa fa-user-circle"></i> Tony
+                            <i className="fa fa-user-circle"></i> {firstName}
                         </NavLink>
                         <NavLink to="/" className="main-nav-item" onClick={logout}>
                             <i className="fa fa-sign-out"></i> Sign Out

@@ -6,22 +6,23 @@ import Footer from "../components/Footer"
 import { useFetchLoginUser } from "../api"
 
 function SignIn(){
-    const { isLogged, setLogged, authToken, setAuthToken } = useContext(AuthContext)
+    const { isLogged, setLogged } = useContext(AuthContext)
 
     const { FetchLoginUser, data, isError } = useFetchLoginUser()
 
     const[loginEmail, setLoginEmail] = useState('')
     const[loginPassword, setLoginPassword] = useState('')
     const[loginRemember, setLoginRemember] = useState(false)
-
-    const [isDataLoaded, setDataLoaded] = useState(false)
+    const[authToken, setAuthToken] = useState(null)
+    const[isDataLoaded, setDataLoaded] = useState(false)
     const[errorData, setErrorData] = useState(null)
     const[errorMessage, setErrorMessage] = useState("")
     
     // if user is already logged, redirect to "/user" page
     const navigate = useNavigate()
     useEffect(() => {
-    isLogged && navigate("/user")},[isLogged, navigate])
+        isLogged && navigate("/user")
+    },[isLogged, navigate])
 
     // form input functions
     function handleLoginEmail(event){
@@ -56,7 +57,7 @@ function SignIn(){
         if (isDataLoaded) { // when FetchLoginUser is finished
             // save error response (will be "null" if connection is OK)
             setErrorData(isError)
-            // if connection successful, token is stored in context
+            // if connection successful, token is stored in local state
             data.token && setAuthToken(data.token)
             // if connection successful, user status changes
             data.token && setLogged(true)

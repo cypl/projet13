@@ -1,16 +1,21 @@
 import { useEffect, useContext } from 'react'
-import { AuthContext } from '../utils/Context'
+import { AuthContext, UserContext } from '../utils/Context'
 import { useNavigate } from "react-router"
+import { useFetchUserProfile } from '../api'
 import Header from "../components/Header"
 import Footer from "../components/Footer"
 
 function User(){
     const { isLogged } = useContext(AuthContext)
+    const { firstName, setFirstName, lastName, setLastName} = useContext(UserContext)
+
+    const { FetchUserProfile, data, isError } = useFetchUserProfile()
 
     // if user is not logged, redirect to "/signin" page
     const navigate = useNavigate()
     useEffect(() => {
-    !isLogged && navigate("/signin")},[isLogged, navigate])
+        !isLogged && navigate("/signin")
+    },[isLogged, navigate])
 
     const accounts = [
         {
@@ -29,12 +34,35 @@ function User(){
             amountDescription: "Current Balance",
         }
     ]
+
+    // retrieves Bearer Token from storage
+    function getValidToken(){
+        const authSession = JSON.parse(sessionStorage.getItem('auth'))
+        const authLocal = JSON.parse(localStorage.getItem('auth'))
+        if(authSession != null){
+            return authSession.jwt
+        }else{
+            return authLocal.jwt
+        }
+    }
+    
+    // get User Profile data
+    useEffect(() => {
+        async function getUserProfile(){
+            return await FetchUserProfile(getValidToken())
+        }
+        getUserProfile()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    },[])
+    setFirstName(data.firstName)
+    setLastName(data.lastName)
+
     return (
         <div className="root-wrapper">
             <Header isLogged={isLogged}/>
             <main className="main bg-dark">
                 <div className="header">
-                    <h1>Welcome back<br />Tony Jarvis!</h1>
+                    <h1>Welcome back<br />{firstName} {lastName}!</h1>
                     <button className="edit-button">Edit Name</button>
                 </div>
 
@@ -53,7 +81,7 @@ function User(){
                     </section>
                 ))}
 
-                </main>
+            </main>
             <Footer />
         </div>
     )
