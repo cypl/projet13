@@ -63,24 +63,27 @@ export function useFetchLoginUser() {
 
 
   export function useFetchUserProfile() {
-    const [data, setData] = useState({});
+    // const [data, setData] = useState({});
     const [isError, setError] = useState();
   
-    async function FetchUserProfile(token) {
-      try {
-        const response = await axios.post(profilePath, {}, {
-            headers: {
-              'Authorization': `Bearer ${token}` 
-            }
-        })
-        setData(response.data.body)
-        setError(null)
-      } catch (error) {
-        setError(error.response)
-      }
+    async function FetchUserProfile(token, setData) {
+        try {
+            const response = await axios.post(profilePath, {}, {
+                headers: {
+                    'Authorization': `Bearer ${token}` 
+                }
+            })
+            setData(response.data.body)
+            setError(null)
+            return response.data.body || {}
+        } catch (error) {
+            console.error("fail", error)
+            setError(error.response)
+        }
+        return null
     }
   
-    return { FetchUserProfile, data, isError }
+    return { FetchUserProfile, isError }
   }
 
   

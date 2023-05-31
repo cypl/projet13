@@ -1,11 +1,11 @@
 import { useState, useEffect, useContext } from "react"
 import { AuthContext } from "../utils/Context"
 import { useNavigate } from "react-router"
-import Header from "../components/Header"
-import Footer from "../components/Footer"
 import { useFetchLoginUser } from "../api"
 
+
 function SignIn(){
+
     const { isLogged, setLogged } = useContext(AuthContext)
 
     const { FetchLoginUser, data, isError } = useFetchLoginUser()
@@ -74,8 +74,6 @@ function SignIn(){
     return( 
         <> 
         {!isLogged &&      
-        <div className="root-wrapper">
-            <Header isLogged={isLogged}/>
             <main className="main bg-dark">
                 <section className="sign-in-content">
                     <i className="fa fa-user-circle sign-in-icon"></i>
@@ -103,9 +101,7 @@ function SignIn(){
                         </p>}
                     </form>
                 </section>
-                </main>
-            <Footer />
-        </div>
+            </main>
         }
         </>
         )

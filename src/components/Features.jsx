@@ -1,5 +1,4 @@
-function Features(){
-    const features = [
+const features = [
         {
             iconSource: "/assets/icon-chat.png",
             iconAlt: "Chat Icon",
@@ -18,7 +17,10 @@ function Features(){
             name: "Security you can trust",
             description: "We use top of the line encryption to make sure your data and money is always safe."
         }
-    ]
+    ];
+    
+function Features(){
+    
     return(
         <section className="features">
             <h2 className="sr-only">Features</h2>

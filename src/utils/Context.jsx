@@ -14,8 +14,8 @@ export const AuthProvider = ({ children }) => {
     
     function logout(){
         isLogged && setLogged(false)
-        authSession != null && sessionStorage.removeItem('auth')
-        authLocal != null && localStorage.removeItem('auth')
+        sessionStorage.removeItem('auth')
+        localStorage.removeItem('auth')
         console.log("l'utilisateur est déconnecté")
     }
     return (
