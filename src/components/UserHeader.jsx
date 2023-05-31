@@ -15,6 +15,7 @@ function UserHeader({ firstName, lastName }){
     
     function handleSubmit(event){
         event.preventDefault()
+        console.log(newFirstName,newLastName)
     }
 
     return(
