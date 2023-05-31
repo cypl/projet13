@@ -223,6 +223,7 @@ flex-direction: column;
     flex-direction: column;
     text-align: left;
     margin-bottom: 1rem;
+    position: relative;
   }
   
   .input-wrapper label {
@@ -232,6 +233,20 @@ flex-direction: column;
   .input-wrapper input {
     padding: 5px;
     font-size: 1.2rem;
+    outline:none;
+  }
+  .input-wrapper input.error{
+    border:2px solid rgb(253, 70, 70);
+    background-color:rgb(255, 212, 212)
+  }
+  .error-flag{
+    background-color: rgb(253, 70, 70);
+    position: absolute;
+    bottom: -20px;
+    font-size: 12px;
+    line-height: 12px;
+    padding: 5px;
+    z-index: 1;
   }
   
   .footer {
@@ -289,6 +304,11 @@ flex-direction: column;
     color: #fff;
     font-weight: bold;
     padding: 10px;
+    cursor:pointer;
+  }
+  .edit-button.error{
+    opacity:0.5;
+    pointer-events:none;
   }
   
   .header {
@@ -322,3 +342,43 @@ flex-direction: column;
     }
   }
   
+  .form_edit_profile{
+    width: 80%;
+    max-width:500px;
+    margin:0 auto;
+  }
+  .form_edit_profile .edit-button{
+    max-width:200px;
+    margin:0px auto 0 auto;
+  }
+  .form_edit_profile__group{
+    display:flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+  }
+  .form_edit_profile__group .input-wrapper{
+    width:calc(50% - 10px);
+  }
+  .form_edit_profile__cancel{
+    margin:10px 0 0 0;
+  }
+  .form_edit_profile__cancel span{
+    cursor:pointer;
+    color:#00bc77;
+    border-bottom:1px solid #00bc77;
+    transition:0.05s color ease-in-out, 0.05s border-color ease-in-out;
+  }
+  .form_edit_profile__cancel span:hover{
+    color:#fff;
+    border-color:#fff;
+    transition:0.05s color ease-in-out, 0.05s border-color ease-in-out;
+  }
+  @media (max-width: 720px) {
+    .form_edit_profile{
+      max-width:inherit;
+    }
+    .form_edit_profile__group .input-wrapper{
+      width:100%;
+    }
+   
+  }

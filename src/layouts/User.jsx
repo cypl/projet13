@@ -2,6 +2,7 @@ import { useState, useEffect, useContext } from 'react'
 import { AuthContext, UserContext } from '../utils/Context'
 import { useNavigate } from "react-router"
 import { useFetchUserProfile } from '../api'
+import UserHeader from '../components/UserHeader'
 
 // retrieves Bearer Token from storage
 function getValidToken(){
@@ -62,13 +63,8 @@ function User(){
     
     return (
         <main className="main bg-dark">
-            <div className="header">
-                <h1>Welcome back<br />{firstName} {lastName}!</h1>
-                <button className="edit-button">Edit Name</button>
-            </div>
-
+            <UserHeader firstName={firstName} lastName={lastName}/>
             <h2 className="sr-only">Accounts</h2>
-            
             {accounts.map((a, index) => (
                 <section className="account" key={index}>
                     <div className="account-content-wrapper">
