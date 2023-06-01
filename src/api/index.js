@@ -68,11 +68,11 @@ export function useFetchLoginUser() {
   
     async function FetchUserProfile(token, setData) {
         try {
-            const response = await axios.post(profilePath, {}, {
-                headers: {
-                    'Authorization': `Bearer ${token}` 
-                }
-            })
+            const response = await axios.post(
+                profilePath, 
+                {}, 
+                { headers: { 'Authorization': `Bearer ${token}` } }
+            )
             setData(response.data.body)
             setError(null)
             return response.data.body || {}
@@ -86,4 +86,24 @@ export function useFetchLoginUser() {
     return { FetchUserProfile, isError }
   }
 
+
+  export function useFetchChangeUserProfile() {
+    const [data, setData] = useState({});
+    const [isError, setError] = useState();
   
+    async function FetchChangeUserProfile(token, firstName, lastName) {
+      try {
+        const response = await axios.put(
+            profilePath,
+            { firstName, lastName },
+            { headers: { Authorization: `Bearer ${token}` } }
+        )
+        setData(response.data.body)
+        setError(null)
+      } catch (error) {
+        setError(error.response)
+      }
+    }
+  
+    return { FetchChangeUserProfile, data, isError }
+  }

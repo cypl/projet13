@@ -2,6 +2,7 @@ import { useState, useEffect, useContext } from "react"
 import { AuthContext } from "../utils/Context"
 import { useNavigate } from "react-router"
 import { useFetchLoginUser } from "../api"
+//import { validStringInput } from "../utils/validStringInput"
 
 
 function SignIn(){
@@ -17,6 +18,8 @@ function SignIn(){
     const[isDataLoaded, setDataLoaded] = useState(false)
     const[errorData, setErrorData] = useState(null)
     const[errorMessage, setErrorMessage] = useState("")
+    //const [errorCounts, setErrorCounts] = useState(0)
+
     
     // if user is already logged, redirect to "/user" page
     const navigate = useNavigate()
@@ -27,7 +30,9 @@ function SignIn(){
     // form input functions
     function handleLoginEmail(event){
         setLoginEmail(event.target.value)
+        //validStringInput(event, "text", setLoginEmail, setErrorCounts)
     }
+    
     function handleLoginPassword(event){
         setLoginPassword(event.target.value)
     }
@@ -81,11 +86,11 @@ function SignIn(){
                     <form className="sign-in-form" onSubmit={handleLoginSubmit}>
                     <div className="input-wrapper">
                         <label htmlFor="username">Username</label>
-                        <input type="text" id="username" value={loginEmail} onChange={handleLoginEmail}/>
+                        <input type="text" id="username" onChange={handleLoginEmail}/>
                     </div>
                     <div className="input-wrapper">
                         <label htmlFor="password">Password</label>
-                        <input type="password" id="password" value={loginPassword} onChange={handleLoginPassword}/>
+                        <input type="password" id="password" onChange={handleLoginPassword}/>
                     </div>
                     <div className="input-remember">
                         <input type="checkbox" id="remember-me" checked={loginRemember} onChange={handleLoginRemember}/>

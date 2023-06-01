@@ -2,18 +2,10 @@ import { useState, useEffect, useContext } from 'react'
 import { AuthContext, UserContext } from '../utils/Context'
 import { useNavigate } from "react-router"
 import { useFetchUserProfile } from '../api'
+import { getTokenFromStorage } from '../utils/getTokenFromStorage'
 import UserHeader from '../components/UserHeader'
 
-// retrieves Bearer Token from storage
-function getValidToken(){
-    const authSession = JSON.parse(sessionStorage.getItem('auth'))
-    const authLocal = JSON.parse(localStorage.getItem('auth'))
-    if(authSession != null){
-        return authSession.jwt
-    }else{
-        return authLocal.jwt
-    }
-}
+
 
 const accounts = [
     {
@@ -36,7 +28,7 @@ const accounts = [
 
 function User(){
     const { isLogged } = useContext(AuthContext)
-    const { firstName, setFirstName, lastName, setLastName } = useContext(UserContext)
+    const { setFirstName, setLastName } = useContext(UserContext)
     const [ data, setData ] = useState(null)
 
     const { FetchUserProfile } = useFetchUserProfile()
@@ -50,7 +42,7 @@ function User(){
     // get User Profile data
     useEffect(() => {
         async function getUserProfile(){
-            const result = await FetchUserProfile(getValidToken(), setData)
+            const result = await FetchUserProfile(getTokenFromStorage(), setData)
             return result
         }
         if (!data) getUserProfile()
@@ -63,7 +55,7 @@ function User(){
     
     return (
         <main className="main bg-dark">
-            <UserHeader firstName={firstName} lastName={lastName}/>
+            <UserHeader/>
             <h2 className="sr-only">Accounts</h2>
             {accounts.map((a, index) => (
                 <section className="account" key={index}>
