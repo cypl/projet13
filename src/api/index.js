@@ -58,10 +58,12 @@ export function useFetchUserProfile() {
 
 // pushes user profile data changes to database
 export function useFetchChangeUserProfile() {
-    const [data, setData] = useState({});
-    const [isError, setError] = useState();
+    const [data, setData] = useState({})
+    const [isLoaded, setLoaded] = useState(false)
+    const [isError, setError] = useState()
 
     async function FetchChangeUserProfile(token, firstName, lastName) {
+        setLoaded(false)
         try {
             const response = await axios.put(
                 profilePath,
@@ -70,10 +72,12 @@ export function useFetchChangeUserProfile() {
             )
             setData(response.data.body)
             setError(null)
+            setLoaded(true)
         } catch (error) {
             setError(error.response)
+            setLoaded(true)
         }
     }
 
-    return { FetchChangeUserProfile, data, isError }
+    return { FetchChangeUserProfile, data, isLoaded, isError }
 }

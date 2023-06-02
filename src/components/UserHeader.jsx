@@ -5,7 +5,7 @@ import { useFetchChangeUserProfile } from '../api'
 import { getTokenFromStorage } from '../utils/getTokenFromStorage'
 
 function UserHeader(){
-    const { FetchChangeUserProfile, data, isError } = useFetchChangeUserProfile()
+    const { FetchChangeUserProfile, data, isLoaded, isError } = useFetchChangeUserProfile()
 
     const { firstName, setFirstName, lastName, setLastName } = useContext(UserContext)
     const [isModifying, setModifying] = useState(false)
@@ -14,7 +14,6 @@ function UserHeader(){
     const [errorCounts, setErrorCounts] = useState(0)
 
     // states used for Fetch hook :
-    const[isDataLoaded, setDataLoaded] = useState(false)
     const[errorData, setErrorData] = useState(null)
     const[errorMessage, setErrorMessage] = useState("")
 
@@ -31,8 +30,7 @@ function UserHeader(){
 
     async function handleSubmit(event){
         event.preventDefault()
-        await FetchChangeUserProfile(getTokenFromStorage(), newFirstName, newLastName) // = API call
-        setDataLoaded(true) // when FetchChangeUserProfile is finished, data are loaded
+        await FetchChangeUserProfile(getTokenFromStorage(), newFirstName, newLastName)
     }
 
     useEffect(() => {
@@ -42,7 +40,7 @@ function UserHeader(){
             else if(errorData.status === 500){setErrorMessage("Internal Server Error.")}
             else{setErrorMessage("An error occured. Please, contact the support.")}
         }
-        if (isDataLoaded) { // when FetchChangeUserProfile is finished
+        if (isLoaded) { // when Fetch is finished
             // save error response (will be "null" if connection is OK)
             setErrorData(isError)
             // if connection successful, firstName and lastName are sent to the context
@@ -53,7 +51,7 @@ function UserHeader(){
             // then, if there's no error, we close the form
             errorData === null && setModifying(false)
         }
-      }, [data, errorData, errorMessage, isDataLoaded, isError, setFirstName, setLastName])
+      }, [data, errorData, errorMessage, isLoaded, isError, setFirstName, setLastName])
     
     
     
