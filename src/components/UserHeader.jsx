@@ -28,11 +28,13 @@ function UserHeader(){
         setNewLastName(lastName)
     },[firstName, lastName])
     
+
     async function handleSubmit(event){
         event.preventDefault()
         await FetchChangeUserProfile(getTokenFromStorage(), newFirstName, newLastName) // = API call
-        setDataLoaded(true) // when FetchLoginUser is finished, data are loaded
+        setDataLoaded(true) // when FetchChangeUserProfile is finished, data are loaded
     }
+
     useEffect(() => {
         function showError(errorData){
             if(errorData.status === 400){setErrorMessage("Username and/or password are invalid.")}
@@ -43,12 +45,13 @@ function UserHeader(){
         if (isDataLoaded) { // when FetchChangeUserProfile is finished
             // save error response (will be "null" if connection is OK)
             setErrorData(isError)
+            // if connection successful, firstName and lastName are sent to the context
             data && setFirstName(data.firstName)
             data && setLastName(data.lastName)
-            // if connection successful, token is stored in local state
             // if connection fails, an error pops in
             errorData != null && showError(errorData)
-            setModifying(false)
+            // then, if there's no error, we close the form
+            errorData === null && setModifying(false)
         }
       }, [data, errorData, errorMessage, isDataLoaded, isError, setFirstName, setLastName])
     
