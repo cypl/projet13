@@ -6,19 +6,15 @@ import { useFetchLoginUser } from "../api"
 
 
 function SignIn(){
-
     const { isLogged, setLogged } = useContext(AuthContext)
-
-    const { FetchLoginUser, data, isError } = useFetchLoginUser()
+    const { FetchLoginUser, data, isLoaded, isError } = useFetchLoginUser()
 
     const[loginEmail, setLoginEmail] = useState('')
     const[loginPassword, setLoginPassword] = useState('')
     const[loginRemember, setLoginRemember] = useState(false)
     const[authToken, setAuthToken] = useState(null)
-    const[isDataLoaded, setDataLoaded] = useState(false)
     const[errorData, setErrorData] = useState(null)
     const[errorMessage, setErrorMessage] = useState("")
-    //const [errorCounts, setErrorCounts] = useState(0)
 
     
     // if user is already logged, redirect to "/user" page
@@ -32,7 +28,6 @@ function SignIn(){
         setLoginEmail(event.target.value)
         //validStringInput(event, "text", setLoginEmail, setErrorCounts)
     }
-    
     function handleLoginPassword(event){
         setLoginPassword(event.target.value)
     }
@@ -42,7 +37,6 @@ function SignIn(){
     async function handleLoginSubmit(event){
         event.preventDefault()
         await FetchLoginUser(loginEmail, loginPassword) // = API call
-        setDataLoaded(true) // when FetchLoginUser is finished, data are loaded
     }
 
       
@@ -53,13 +47,13 @@ function SignIn(){
                 localStorage.setItem('auth', authStorage) : 
                 sessionStorage.setItem('auth', authStorage)
         }
-        function showError(errorData){
+        function showErrorMessage(errorData){
             if(errorData.status === 400){setErrorMessage("Username and/or password are invalid.")}
             else if(errorData.status === 404){setErrorMessage("Error connecting server.")}
             else if(errorData.status === 500){setErrorMessage("Internal Server Error.")}
             else{setErrorMessage("An error occured. Please, contact the support.")}
         }
-        if (isDataLoaded) { // when FetchLoginUser is finished
+        if (isLoaded) { // when FetchLoginUser is finished
             // save error response (will be "null" if connection is OK)
             setErrorData(isError)
             // if connection successful, token is stored in local state
@@ -67,13 +61,13 @@ function SignIn(){
             // if connection successful, user status changes
             data.token && setLogged(true)
             // if connection successful, user connection is stored (localStorage or sessionStorage)
-            data.token && populateStorage(loginEmail,authToken)
+            data.token && populateStorage(loginEmail, authToken)
             // if connection successful, user is redirected to "user" page
             isLogged && navigate("/user")
             // if connection fails, an error pops in
-            errorData != null && showError(errorData)
+            errorData != null && showErrorMessage(errorData)
         }
-      }, [isDataLoaded, data, isError, setLogged, loginRemember, loginEmail, errorData, navigate, isLogged, setAuthToken, authToken])
+      }, [isLoaded, data, isError, setLogged, loginRemember, loginEmail, errorData, navigate, isLogged, setAuthToken, authToken])
 
 
     return( 

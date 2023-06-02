@@ -7,23 +7,27 @@ const profilePath = `${ENV}/user/profile`
 
 // retrieves token authentication for a user
 export function useFetchLoginUser() {
-    const [data, setData] = useState({});
-    const [isError, setError] = useState();
+    const [data, setData] = useState({})
+    const [isLoaded, setLoaded] = useState(false)
+    const [isError, setError] = useState()
   
     async function FetchLoginUser(email, password) {
-      try {
-        const response = await axios.post(loginPath, {
-          email,
-          password,
-        })
-        setData(response.data.body)
-        setError(null)
-      } catch (error) {
-        setError(error.response)
-      }
+        setLoaded(false)
+        try {
+            const response = await axios.post(
+                loginPath, 
+                { email, password }
+            )
+            setData(response.data.body)
+            setError(null)
+            setLoaded(true)
+        } catch (error) {
+            setError(error.response)
+            setLoaded(true)
+        }
     }
   
-    return { FetchLoginUser, data, isError }
+    return { FetchLoginUser, data, isLoaded, isError }
 }
 
 // retrieves user profile data, based on authentication token
