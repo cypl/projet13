@@ -1,4 +1,4 @@
-import { useState, useEffect, useContext } from 'react'
+import { useEffect, useContext } from 'react'
 import { AuthContext, UserContext } from '../utils/Context'
 import { useNavigate } from "react-router"
 import { useFetchUserProfile } from '../api'
@@ -27,11 +27,9 @@ const accounts = [
 
 
 function User(){
-    const { isLogged } = useContext(AuthContext)
+    const { isLogged, setLogged } = useContext(AuthContext)
     const { setFirstName, setLastName } = useContext(UserContext)
-    const [ data, setData ] = useState(null)
-
-    const { FetchUserProfile } = useFetchUserProfile()
+    const { FetchUserProfile, data, isLoaded, isError } = useFetchUserProfile()
 
     // if user is not logged, redirect to "/signin" page
     const navigate = useNavigate()
@@ -39,20 +37,28 @@ function User(){
         !isLogged && navigate("/signin")
     },[isLogged, navigate])
 
-    // get User Profile data
-    useEffect(() => {
-        async function getUserProfile(){
-            const result = await FetchUserProfile(getTokenFromStorage(), setData)
-            return result
-        }
-        if (!data) getUserProfile()
-    },[FetchUserProfile, data])
+    // then, we can fetch User Profile data using auth token
+    useEffect(()=> {
+        FetchUserProfile(getTokenFromStorage())
+    }, [])
 
     useEffect(()=> {
-        data && setFirstName(data.firstName)
-        data && setLastName(data.lastName)
-    }, [data, setFirstName, setLastName])
+        if (isLoaded) { // when data is loaded
+            // if data exist, data is sent to context
+            data && setFirstName(data.firstName)
+            data && setLastName(data.lastName)
+            // and we just assure user is logged
+            data && setLogged(true)
+            // if there is an error (eg: token was outdated, so user needs to authenticate again)
+            if(isError != null) {
+                navigate("/signin") 
+                setLogged(false)
+                console.log(isError)
+            }
+        }
+    }, [data, isError, isLoaded, navigate, setFirstName, setLastName, setLogged])
     
+
     return (
         <main className="main bg-dark">
             <UserHeader/>

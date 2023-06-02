@@ -4,7 +4,7 @@ export function getTokenFromStorage(){
     const authLocal = JSON.parse(localStorage.getItem('auth'))
     if(authSession != null){
         return authSession.jwt
-    }else{
+    } else if (authLocal != null) {
         return authLocal.jwt
     }
 }
