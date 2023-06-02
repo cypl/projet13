@@ -2,8 +2,6 @@ import { useState, useEffect, useContext } from "react"
 import { AuthContext } from "../utils/Context"
 import { useNavigate } from "react-router"
 import { useFetchLoginUser } from "../api"
-//import { validStringInput } from "../utils/validStringInput"
-
 
 function SignIn(){
     const { isLogged, setLogged } = useContext(AuthContext)
@@ -15,7 +13,6 @@ function SignIn(){
     const[authToken, setAuthToken] = useState(null)
     const[errorData, setErrorData] = useState(null)
     const[errorMessage, setErrorMessage] = useState("")
-
     
     // if user is already logged, redirect to "/user" page
     const navigate = useNavigate()
