@@ -1,10 +1,17 @@
-import { useState, useEffect, useContext } from "react"
-import { AuthContext } from "../utils/Context"
+import { useState, useEffect } from "react"
+import { useSelector, useDispatch } from "react-redux"
+import { loggedIn } from "../store/loggerSlice"
+
+//import { AuthContext } from "../utils/Context"
 import { useNavigate } from "react-router"
 import { useFetchLoginUser } from "../api"
 
 function SignIn(){
-    const { isLogged, setLogged } = useContext(AuthContext)
+    const dispatch = useDispatch()
+    const loggedUser = useSelector((state) => state.logger.isLoggedIn)
+    console.log(loggedUser)
+
+    //const { isLogged, setLogged } = useContext(AuthContext)
     const { FetchLoginUser, data, isLoaded, isError } = useFetchLoginUser()
 
     const[loginEmail, setLoginEmail] = useState('')
@@ -16,9 +23,9 @@ function SignIn(){
     
     // if user is already logged, redirect to "/user" page
     const navigate = useNavigate()
-    useEffect(() => {
-        isLogged && navigate("/user")
-    },[isLogged, navigate])
+    // useEffect(() => {
+    //     loggedUser && navigate("/user")
+    // },[loggedUser, navigate])
 
     // form input functions
     function handleLoginEmail(event){
@@ -36,6 +43,10 @@ function SignIn(){
         await FetchLoginUser(loginEmail, loginPassword) // = API call
     }
 
+    function handleTest(event){
+        event.preventDefault()
+        dispatch(loggedIn())
+    }
       
     useEffect(() => {
         function populateStorage(loginEmail, loginData) {
@@ -56,21 +67,22 @@ function SignIn(){
             // if connection successful, token is stored in local state
             data.token && setAuthToken(data.token)
             // if connection successful, user status changes
-            data.token && setLogged(true)
+            data.token && dispatch(loggedIn())
             // if connection successful, user connection is stored (localStorage or sessionStorage)
-            data.token && populateStorage(loginEmail, authToken)
+            if (data.token && authToken != null) populateStorage(loginEmail, authToken)
             // if connection successful, user is redirected to "user" page
-            isLogged && navigate("/user")
+            // loggedUser && navigate("/user")
             // if connection fails, an error pops in
             errorData != null && showErrorMessage(errorData)
         }
-      }, [isLoaded, data, isError, setLogged, loginRemember, loginEmail, errorData, navigate, isLogged, setAuthToken, authToken])
+      }, [authToken, data.token, dispatch, errorData, isError, isLoaded, loggedUser, loginEmail, loginRemember, navigate])
 
 
     return( 
         <> 
-        {!isLogged &&      
+        {/* {!loggedUser &&       */}
             <main className="main bg-dark">
+                <button onClick={handleTest}>Test reducer</button>
                 <section className="sign-in-content">
                     <i className="fa fa-user-circle sign-in-icon"></i>
                     <h1>Sign In</h1>
@@ -98,7 +110,7 @@ function SignIn(){
                     </form>
                 </section>
             </main>
-        }
+        {/* } */}
         </>
         )
 }
