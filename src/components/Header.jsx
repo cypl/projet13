@@ -1,10 +1,21 @@
 import { NavLink } from "react-router-dom"
 import { useContext } from "react"
-import { AuthContext, UserContext } from "../utils/Context"
+import { UserContext } from "../utils/Context"
+
+import { useSelector, useDispatch } from "react-redux"
+import { loggedOut } from "../store/loggerSlice"
+
 
 function Header(){
-    const { isLogged, logout } = useContext(AuthContext)
+    const dispatch = useDispatch()
+    const loggedUser = useSelector((state) => state.logger.isLoggedIn)
+
+    //const { isLogged, logout } = useContext(AuthContext)
     const { firstName } = useContext(UserContext)
+
+    function logOut(){
+        dispatch(loggedOut())
+    }
 
     return (
         <nav className="main-nav">
@@ -13,12 +24,12 @@ function Header(){
                 <h1 className="sr-only">Argent Bank</h1>
             </NavLink>
             <div>
-                {isLogged ? 
+                {loggedUser ? 
                     <div>
                         <NavLink to="/user" className="main-nav-item">
                             <i className="fa fa-user-circle"></i> {firstName}
                         </NavLink>
-                        <NavLink to="/" className="main-nav-item" onClick={logout}>
+                        <NavLink to="/" className="main-nav-item" onClick={logOut}>
                             <i className="fa fa-sign-out"></i> Sign Out
                         </NavLink>
                     </div>
