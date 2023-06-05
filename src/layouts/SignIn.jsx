@@ -1,8 +1,6 @@
 import { useState, useEffect } from "react"
 import { useSelector, useDispatch } from "react-redux"
 import { loggedIn } from "../store/loggerSlice"
-
-//import { AuthContext } from "../utils/Context"
 import { useNavigate } from "react-router"
 import { useFetchLoginUser } from "../api"
 
@@ -21,9 +19,8 @@ function SignIn(){
     
     const navigate = useNavigate()
 
-    // if user is already logged, redirect to "/user" page
     useEffect(() => {
-        // Check if there is already a stored token
+        // Check if there is already a stored authentication token
         const authSession = sessionStorage.getItem('auth')
         const authLocal = localStorage.getItem('auth')
         if((authSession != null) || (authLocal != null)){
@@ -49,7 +46,7 @@ function SignIn(){
     }
     async function handleLoginSubmit(event){
         event.preventDefault()
-        await FetchLoginUser(loginEmail, loginPassword) // = API call
+        await FetchLoginUser(loginEmail, loginPassword)
     }
 
     useEffect(() => {
