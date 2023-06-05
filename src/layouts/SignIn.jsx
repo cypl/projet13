@@ -9,9 +9,7 @@ import { useFetchLoginUser } from "../api"
 function SignIn(){
     const dispatch = useDispatch()
     const loggedUser = useSelector((state) => state.logger.isLoggedIn)
-    console.log(loggedUser)
 
-    //const { isLogged, setLogged } = useContext(AuthContext)
     const { FetchLoginUser, data, isLoaded, isError } = useFetchLoginUser()
 
     const[loginEmail, setLoginEmail] = useState('')
@@ -21,16 +19,27 @@ function SignIn(){
     const[errorData, setErrorData] = useState(null)
     const[errorMessage, setErrorMessage] = useState("")
     
-    // if user is already logged, redirect to "/user" page
     const navigate = useNavigate()
-    // useEffect(() => {
-    //     loggedUser && navigate("/user")
-    // },[loggedUser, navigate])
+
+    // if user is already logged, redirect to "/user" page
+    useEffect(() => {
+        // Check if there is already a stored token
+        const authSession = sessionStorage.getItem('auth')
+        const authLocal = localStorage.getItem('auth')
+        if((authSession != null) || (authLocal != null)){
+            console.log("il y a un token enregistré.")
+            dispatch(loggedIn())
+            navigate("/user")
+        }
+        // Or, if the user is already logged
+        loggedUser && navigate("/user")
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    },[])
+
 
     // form input functions
     function handleLoginEmail(event){
         setLoginEmail(event.target.value)
-        //validStringInput(event, "text", setLoginEmail, setErrorCounts)
     }
     function handleLoginPassword(event){
         setLoginPassword(event.target.value)
@@ -43,11 +52,6 @@ function SignIn(){
         await FetchLoginUser(loginEmail, loginPassword) // = API call
     }
 
-    function handleTest(event){
-        event.preventDefault()
-        dispatch(loggedIn())
-    }
-      
     useEffect(() => {
         function populateStorage(loginEmail, loginData) {
             const authStorage = JSON.stringify({email: loginEmail, jwt: loginData})
@@ -68,10 +72,13 @@ function SignIn(){
             data.token && setAuthToken(data.token)
             // if connection successful, user status changes
             data.token && dispatch(loggedIn())
-            // if connection successful, user connection is stored (localStorage or sessionStorage)
-            if (data.token && authToken != null) populateStorage(loginEmail, authToken)
-            // if connection successful, user is redirected to "user" page
-            // loggedUser && navigate("/user")
+            // if connection successful, 
+            // user connection is stored (localStorage or sessionStorage)
+            // user is redirected to "user" page
+            if (data.token && authToken != null) {
+                populateStorage(loginEmail, authToken)
+                navigate("/user")
+            }
             // if connection fails, an error pops in
             errorData != null && showErrorMessage(errorData)
         }
@@ -80,9 +87,8 @@ function SignIn(){
 
     return( 
         <> 
-        {/* {!loggedUser &&       */}
+        {!loggedUser && 
             <main className="main bg-dark">
-                <button onClick={handleTest}>Test reducer</button>
                 <section className="sign-in-content">
                     <i className="fa fa-user-circle sign-in-icon"></i>
                     <h1>Sign In</h1>
@@ -110,7 +116,7 @@ function SignIn(){
                     </form>
                 </section>
             </main>
-        {/* } */}
+        }
         </>
         )
 }

@@ -14,6 +14,8 @@ function Header(){
 
     function logOut(){
         dispatch(loggedOut())
+        sessionStorage.removeItem('auth')
+        localStorage.removeItem('auth')
     }
 
     return (
