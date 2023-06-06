@@ -1,12 +1,12 @@
 import { useEffect } from 'react'
 // import { AuthContext, UserContext } from '../utils/Context'
 import { useNavigate } from "react-router"
-// import { useFetchUserProfile } from '../api'
-// import { getTokenFromStorage } from '../utils/getTokenFromStorage'
+import { useFetchUserProfile } from '../api'
+import { getTokenFromStorage } from '../utils/getTokenFromStorage'
 import UserHeader from '../components/UserHeader'
 
 import { useSelector, useDispatch } from "react-redux"
-//import { loggedIn } from "../store/loggerSlice"
+import { setFirstName, setLastName } from '../store/profileSlice'
 
 
 
@@ -32,11 +32,14 @@ const accounts = [
 function User(){
     const dispatch = useDispatch()
     const loggedUser = useSelector((state) => state.logger.isLoggedIn)
-    console.log(loggedUser)
+    // console.log(loggedUser)
+
+    // const firstName = useSelector(state => state.profile.firstName)
+    // const latstName = useSelector(state => state.profile.lastName)
 
 
     //const { setFirstName, setLastName } = useContext(UserContext)
-    //const { FetchUserProfile, data, isLoaded, isError } = useFetchUserProfile()
+    const { FetchUserProfile, data, isLoaded, isError } = useFetchUserProfile()
 
     // if user is not logged, redirect to "/signin" page
     const navigate = useNavigate()
@@ -45,25 +48,26 @@ function User(){
     },[loggedUser, navigate])
 
     // then, we can fetch User Profile data using auth token
-    // useEffect(()=> {
-    //     FetchUserProfile(getTokenFromStorage())
-    // }, [])
+    useEffect(()=> {
+        FetchUserProfile(getTokenFromStorage())
+    }, [])
 
-    // useEffect(()=> {
-    //     if (isLoaded) { // when data is loaded
-    //         // if data exist, data is sent to context
-    //         data && setFirstName(data.firstName)
-    //         data && setLastName(data.lastName)
-    //         // and we just assure user is logged
-    //         data && setLogged(true)
-    //         // if there is an error (eg: token was outdated, so user needs to authenticate again)
-    //         if(isError != null) {
-    //             navigate("/signin") 
-    //             setLogged(false)
-    //             console.log(isError)
-    //         }
-    //     }
-    // }, [data, isError, isLoaded, navigate, setFirstName, setLastName, setLogged])
+    useEffect(()=> {
+        if (isLoaded) { // when data is loaded
+            data && console.log(data)
+            // // if data exist, data is sent to context
+            data && dispatch(setFirstName(data.firstName))
+            data && dispatch(setLastName(data.lastName))
+            // // and we just assure user is logged
+            // data && setLogged(true)
+            // // if there is an error (eg: token was outdated, so user needs to authenticate again)
+            // if(isError != null) {
+            //     navigate("/signin") 
+            //     setLogged(false)
+            //     console.log(isError)
+            // }
+        }
+    }, [data, dispatch, isError, isLoaded])
     
 
     return (

@@ -1,4 +1,4 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createSlice } from '@reduxjs/toolkit'
 
 const initialState = {
     firstName: "",
@@ -10,14 +10,14 @@ export const profileSlice = createSlice({
   initialState,
   reducers: {
     setFirstName: (state, text) => {
-      state.firstName = text;
+      state.firstName = text
     },
     setLastName: (state, text) => {
-      state.lastName = text;
+      state.lastName = text
     },
   },
-});
+})
 
-export const { setFirstName, setLastName } = profileSlice.actions;
+export const { setFirstName, setLastName } = profileSlice.actions
 
-export default profileSlice.reducer;
+export default profileSlice.reducer
