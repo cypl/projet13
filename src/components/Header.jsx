@@ -1,16 +1,11 @@
 import { NavLink } from "react-router-dom"
-import { useContext } from "react"
-import { UserContext } from "../utils/Context"
-// add redux
 import { useSelector, useDispatch } from "react-redux"
 import { loggedOut } from "../store/loggerSlice"
-
 
 function Header(){
     const dispatch = useDispatch()
     const loggedUser = useSelector((state) => state.logger.isLoggedIn)
-
-    const { firstName } = useContext(UserContext)
+    const firstName = useSelector(state => state.profile.firstName.payload)
 
     function logOut(){
         dispatch(loggedOut())
