@@ -5,7 +5,7 @@ import { loggedOut } from "../store/loggerSlice"
 function Header(){
     const dispatch = useDispatch()
     const loggedUser = useSelector((state) => state.logger.isLoggedIn)
-    const firstName = useSelector(state => state.profile.firstName.payload)
+    const firstName = useSelector(state => state.profile.firstName)
 
     function logOut(){
         dispatch(loggedOut())

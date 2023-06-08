@@ -9,11 +9,11 @@ export const profileSlice = createSlice({
   name: 'profile',
   initialState,
   reducers: {
-    setFirstName: (state, text) => {
-      state.firstName = text
+    setFirstName: (state, action) => {
+      state.firstName = action.payload.name
     },
-    setLastName: (state, text) => {
-      state.lastName = text
+    setLastName: (state, action) => {
+      state.lastName = action.payload.name
     },
   },
 })

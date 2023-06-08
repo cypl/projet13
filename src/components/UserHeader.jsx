@@ -7,8 +7,10 @@ import { setFirstName, setLastName } from '../store/profileSlice'
 
 function UserHeader(){
     const dispatch = useDispatch()
-    const firstName = useSelector(state => state.profile.firstName.payload)
-    const lastName = useSelector(state => state.profile.lastName.payload)
+    const firstName = useSelector(state => state.profile.firstName)
+    const lastName = useSelector(state => state.profile.lastName)
+
+    
 
     const { FetchChangeUserProfile, data, isLoaded, isError } = useFetchChangeUserProfile()
 
@@ -48,8 +50,8 @@ function UserHeader(){
             // save error response (will be "null" if connection is OK)
             setErrorData(isError)
             // if connection successful, firstName and lastName are sent to the context
-            data && dispatch(setFirstName(data.firstName))
-            data && dispatch(setLastName(data.lastName))
+            data && dispatch(setFirstName({name: data.firstName}))
+            data && dispatch(setLastName({name: data.lastName}))
             // if connection fails, an error pops in
             errorData != null && showError(errorData)
             // then, if there's no error, we close the form

@@ -45,10 +45,10 @@ function User(){
 
     useEffect(()=> {
         if (isLoaded) { // when data is loaded
-            // data && console.log(data)
+            //data && console.log(data)
             // if data exist, data is sent to context
-            data && dispatch(setFirstName(data.firstName))
-            data && dispatch(setLastName(data.lastName))
+            data && dispatch(setFirstName({name: data.firstName}))
+            data && dispatch(setLastName({name: data.lastName}))
             // and we just assure user is logged
             data && dispatch(loggedIn())
             // if there is an error (eg: token was outdated, so user needs to authenticate again)
