@@ -10,8 +10,6 @@ function UserHeader(){
     const firstName = useSelector(state => state.profile.firstName)
     const lastName = useSelector(state => state.profile.lastName)
 
-    
-
     const { FetchChangeUserProfile, data, isLoaded, isError } = useFetchChangeUserProfile()
 
     const [isModifying, setModifying] = useState(false)
@@ -41,7 +39,7 @@ function UserHeader(){
 
     useEffect(() => {
         function showError(errorData){
-            if(errorData.status === 400){setErrorMessage("Username and/or password are invalid.")}
+            if(errorData.status === 400){setErrorMessage("Your last connection seems too old. Please signin again.")}
             else if(errorData.status === 404){setErrorMessage("Error connecting server.")}
             else if(errorData.status === 500){setErrorMessage("Internal Server Error.")}
             else{setErrorMessage("An error occured. Please, contact the support.")}
