@@ -34,9 +34,16 @@ function User(){
 
     // if user is not logged, redirect to "/signin" page
     const navigate = useNavigate()
-    // useEffect(() => {
-    //     !loggedUser && navigate("/signin/")
-    // },[loggedUser, navigate])
+    useEffect(() => {
+        // Check if there is already a stored authentication token
+        const authSession = sessionStorage.getItem('auth')
+        const authLocal = localStorage.getItem('auth')
+        if((authSession != null) || (authLocal != null)){
+            dispatch(loggedIn())
+        } else {
+            navigate("/signin/")
+        }
+    },[dispatch, loggedUser, navigate])
 
     // then, we can fetch User Profile data using auth token
     useEffect(()=> {
@@ -45,7 +52,6 @@ function User(){
 
     useEffect(()=> {
         if (isLoaded) { // when data is loaded
-            //data && console.log(data)
             // if data exist, data is sent to context
             data && dispatch(setFirstName({name: data.firstName}))
             data && dispatch(setLastName({name: data.lastName}))

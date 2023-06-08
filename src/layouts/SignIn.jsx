@@ -23,7 +23,6 @@ function SignIn(){
         const authSession = sessionStorage.getItem('auth')
         const authLocal = localStorage.getItem('auth')
         if((authSession != null) || (authLocal != null)){
-            console.log("il y a un token enregistré.")
             dispatch(loggedIn())
             navigate("/user")
         }
