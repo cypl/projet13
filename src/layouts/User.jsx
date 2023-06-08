@@ -34,9 +34,9 @@ function User(){
 
     // if user is not logged, redirect to "/signin" page
     const navigate = useNavigate()
-    useEffect(() => {
-        !loggedUser && navigate("/signin")
-    },[loggedUser, navigate])
+    // useEffect(() => {
+    //     !loggedUser && navigate("/signin/")
+    // },[loggedUser, navigate])
 
     // then, we can fetch User Profile data using auth token
     useEffect(()=> {
@@ -53,9 +53,11 @@ function User(){
             data && dispatch(loggedIn())
             // if there is an error (eg: token was outdated, so user needs to authenticate again)
             if(isError != null) {
-                navigate("/signin")
-                dispatch(loggedOut()) 
-                console.log(isError)
+                navigate("/error/" + isError.status)
+                dispatch(loggedOut())
+                sessionStorage.removeItem('auth')
+                localStorage.removeItem('auth')
+                console.log(isError.status)
             }
         }
     }, [data, dispatch, isError, isLoaded, navigate])
@@ -63,20 +65,26 @@ function User(){
 
     return (
         <main className="main bg-dark">
-            <UserHeader/>
-            <h2 className="sr-only">Accounts</h2>
-            {accounts.map((a, index) => (
-                <section className="account" key={index}>
-                    <div className="account-content-wrapper">
-                    <h3 className="account-title">{a.name}</h3>
-                    <p className="account-amount">{a.amount}</p>
-                    <p className="account-amount-description">{a.amountDescription}</p>
-                    </div>
-                    <div className="account-content-wrapper cta">
-                    <button className="transaction-button">View transactions</button>
-                    </div>
-                </section>
-            ))}
+            {isLoaded && isError === null ? (
+                <>
+                <UserHeader/>
+                <h2 className="sr-only">Accounts</h2>
+                {accounts.map((a, index) => (
+                    <section className="account" key={index}>
+                        <div className="account-content-wrapper">
+                        <h3 className="account-title">{a.name}</h3>
+                        <p className="account-amount">{a.amount}</p>
+                        <p className="account-amount-description">{a.amountDescription}</p>
+                        </div>
+                        <div className="account-content-wrapper cta">
+                        <button className="transaction-button">View transactions</button>
+                        </div>
+                    </section>
+                ))}
+                </>
+            ) : (
+                <></>
+            )}
         </main>
     )
 }
