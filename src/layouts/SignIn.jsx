@@ -4,6 +4,10 @@ import { loggedIn } from "../store/loggerSlice"
 import { useNavigate } from "react-router"
 import { useFetchLoginUser } from "../api"
 
+/**
+ * Displays content elements from SignIn page. Child element of Logged.jsx (page).
+ * @returns {JSX.Element} - The JSX markup for the SignIn component.
+ */
 function SignIn(){
     const dispatch = useDispatch()
     const loggedUser = useSelector((state) => state.logger.isLoggedIn)

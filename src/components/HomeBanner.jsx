@@ -1,3 +1,7 @@
+/**
+ * Displays the HomeBanner component on home page.
+ * @returns {JSX.Element} - The JSX markup for the HomeBanner component.
+ */
 function HomeBanner(){
     return(
         <div className="hero">

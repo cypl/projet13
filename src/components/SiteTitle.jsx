@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import { useLocation } from 'react-router-dom'
 
 /**
- * Ce composant permet changer la balise meta title de la page, après un changement de page
+ * Displays the content of the <meta title> based on current location.
  * @returns
  */
 export default function SiteTitle() {

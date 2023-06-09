@@ -5,6 +5,10 @@ import { getTokenFromStorage } from '../utils/getTokenFromStorage'
 import { useSelector, useDispatch } from "react-redux"
 import { setFirstName, setLastName } from '../store/profileSlice'
 
+/**
+ * Displays the user name on profile page.
+ * @returns {JSX.Element} - The JSX markup for the UserHeader component.
+ */
 function UserHeader(){
     const dispatch = useDispatch()
     const firstName = useSelector(state => state.profile.firstName)

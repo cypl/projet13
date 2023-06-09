@@ -1,4 +1,7 @@
-// retrieves Bearer Token from storage
+/**
+ * Retrieves bearer token from storage.
+ * @returns {String} - The bearer token string
+ */
 export function getTokenFromStorage(){
     const authSession = JSON.parse(sessionStorage.getItem('auth'))
     const authLocal = JSON.parse(localStorage.getItem('auth'))

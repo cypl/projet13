@@ -2,10 +2,14 @@ import { NavLink } from "react-router-dom"
 import { useSelector, useDispatch } from "react-redux"
 import { loggedOut } from "../store/loggerSlice"
 
+/**
+ * Displays the Header component.
+ * @returns {JSX.Element} - The JSX markup for the Header component.
+ */
 function Header(){
     const dispatch = useDispatch()
     const loggedUser = useSelector((state) => state.logger.isLoggedIn)
-    const firstName = useSelector(state => state.profile.firstName)
+    const firstName = useSelector((state) => state.profile.firstName)
 
     function logOut(){
         dispatch(loggedOut())

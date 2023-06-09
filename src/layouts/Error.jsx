@@ -1,8 +1,10 @@
 import { useState, useEffect } from 'react'
-import Header from '../components/Header'
-import Footer from '../components/Footer'
 import { NavLink, useParams, useLocation, useNavigate } from 'react-router-dom'
 
+/**
+ * Displays content elements from Error page. Child element of Logged.jsx (page).
+ * @returns {JSX.Element} - The JSX markup for the Error component.
+ */
 function Error(){
     const [errorFromAPI, setErrorFromAPI] = useState(false)
     const params = useParams().error
@@ -31,29 +33,24 @@ function Error(){
     errorMessages.set('500', ["500", "Internal Server Error.", "Back to homepage", "/"])
 
     return(
-        <div className="root-wrapper">
-            <Header/>
-            <main className="main bg-dark">
-                <p className="error-message">
-                    {errorFromAPI ? 
-                        errorMessages.get(params)[1]
-                        : defaultErrorMessage[1]}
-                </p>
-                <p className="error-code">Code error: {errorFromAPI ? 
-                        errorMessages.get(params)[0]
-                        : defaultErrorMessage[0]}</p>
-                <NavLink to={errorFromAPI ? 
-                        errorMessages.get(params)[3]
-                        : defaultErrorMessage[3]} className="redirect-link">
-                    {errorFromAPI ? 
-                        errorMessages.get(params)[2]
-                        : defaultErrorMessage[2]}
-                </NavLink>
-            </main>
-            <Footer/>
-        </div>
+        <main className="main bg-dark">
+            <p className="error-message">
+                {errorFromAPI ? 
+                    errorMessages.get(params)[1]
+                    : defaultErrorMessage[1]}
+            </p>
+            <p className="error-code">Code error: {errorFromAPI ? 
+                    errorMessages.get(params)[0]
+                    : defaultErrorMessage[0]}</p>
+            <NavLink to={errorFromAPI ? 
+                    errorMessages.get(params)[3]
+                    : defaultErrorMessage[3]} className="redirect-link">
+                {errorFromAPI ? 
+                    errorMessages.get(params)[2]
+                    : defaultErrorMessage[2]}
+            </NavLink>
+        </main>
     )
-
 }
 
 export default Error

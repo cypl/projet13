@@ -1,3 +1,11 @@
+/**
+ * Watch/validate the content of an input field (text or email)
+ * and display an htmm element when the content isn't valid. 
+ * @param {Event} event - when function is called (could be onChange, onClick…)
+ * @param {String} type - the type of input : "text" or "email"
+ * @param {Function} setValue - can be user as a setter in a state
+ * @param {Function} setError - can be user as a setter in a state
+ */
 export function validStringInput(event, type, setValue, setError){
     const regex = type === "text" ? /[^a-zA-ZÀ-ÿ\-']/g : /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/   // "text" or "email"
     const errorMessage = type === "text" ? "Text input looks invalid." : "Email address looks invalid."

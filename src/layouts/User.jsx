@@ -25,7 +25,10 @@ const accounts = [
     }
 ]
 
-
+/**
+ * Displays content elements from User page. Child element of Logged.jsx (page).
+ * @returns {JSX.Element} - The JSX markup for the User component.
+ */
 function User(){
     const dispatch = useDispatch()
     const loggedUser = useSelector((state) => state.logger.isLoggedIn)
