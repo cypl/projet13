@@ -55,17 +55,17 @@ function User(){
 
     useEffect(()=> {
         if (isLoaded) { // when data is loaded
-            // if data exist, data is sent to context
+            // if data exist, data is sent to the store
             data && dispatch(setFirstName({name: data.firstName}))
             data && dispatch(setLastName({name: data.lastName}))
             // and we just assure user is logged
             data && dispatch(loggedIn())
             // if there is an error (eg: token was outdated, so user needs to authenticate again)
             if(isError != null) {
-                navigate("/error/" + isError.status)
+                //sessionStorage.removeItem('auth')
+                //localStorage.removeItem('auth')
                 dispatch(loggedOut())
-                sessionStorage.removeItem('auth')
-                localStorage.removeItem('auth')
+                navigate("/error/" + isError.status)
                 console.log(isError.status)
             }
         }

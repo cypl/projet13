@@ -1,5 +1,20 @@
 import { useState, useEffect } from 'react'
-import { NavLink, useParams, useLocation, useNavigate } from 'react-router-dom'
+import { NavLink, useParams, useNavigate } from 'react-router-dom'
+
+// When params is undefined, here is the content of the page.
+// Eg. User try to access an unknown URL
+const defaultErrorMessage = ["404", "This page doesn't exist.", "Back to homepage", "/"]
+
+// When params exists, it means there is an API error, 
+// here are the contents based on code error from API response.
+// Eg. User try to access an URL, but fetching data triggers an error
+const errorMessages = new Map()
+function setErrorMessage(code, message, btnMessage, url) {
+    errorMessages.set( ''+code, [''+code, message, btnMessage, url])
+}
+setErrorMessage("400", "Your last connection seems too old. Please sign in again.", "Back to login", "/signin")
+setErrorMessage("404", "Error connecting server.", "Back to homepage", "/")
+setErrorMessage("500", "Internal Server Error.", "Back to homepage", "/")
 
 /**
  * Displays content elements from Error page. Child element of Logged.jsx (page).
@@ -8,30 +23,17 @@ import { NavLink, useParams, useLocation, useNavigate } from 'react-router-dom'
 function Error(){
     const [errorFromAPI, setErrorFromAPI] = useState(false)
     const params = useParams().error
-    const { pathname } = useLocation()
     const navigate = useNavigate()
 
     // When user try to access an unknown URL, redirection to /error
     useEffect(() => {
-        if (!["/error/400", "/error/404", "/error/500"].includes(pathname)) {
+        if (![...errorMessages.keys()].includes(params)) {
             navigate("/error")
         } else {
             setErrorFromAPI(true)
         }
-    },[navigate, pathname])
-
-    // When params is undefined, here is the content of the page.
-    // Eg. User try to access an unknown URL
-    const defaultErrorMessage = ["404", "This page doesn't exist.", "Back to homepage", "/"]
-
-    // When params exists, it means there is an API error, 
-    // here are the contents based on code error from API response.
-    // Eg. User try to access an URL, but fetching data triggers an error
-    const errorMessages = new Map()
-    errorMessages.set('400', ["400", "Your last connection seems too old. Please sign in again.", "Back to login", "/signin"])
-    errorMessages.set('404', ["404", "Error connecting server.", "Back to homepage", "/"])
-    errorMessages.set('500', ["500", "Internal Server Error.", "Back to homepage", "/"])
-
+    },[navigate, params])
+    
     return(
         <main className="main bg-dark">
             <p className="error-message">

@@ -68,11 +68,9 @@ function SignIn(){
             // save error response (will be "null" if connection is OK)
             setErrorData(isError)
             // if connection successful, token is stored in local state
-           // data.token && setAuthToken(() => data.token)
             // if connection successful, user status changes
             data.token && dispatch(loggedIn())
             // if connection successful, 
-            // user connection is stored (localStorage or sessionStorage)
             // user is redirected to "user" page
             if (data.token) {
                 populateStorage(loginEmail, data.token)

@@ -11,7 +11,7 @@ function LoggedPage({children}){
     return(
         <div className="root-wrapper">
             <Header/>
-                {children}
+            {children}
             <Footer/>
         </div>
     )
