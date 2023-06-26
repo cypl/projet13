@@ -21,6 +21,7 @@ export function validStringInput(event, type, setValue, setError){
         errorFlag.textContent = errorMessage
         inputWrapper.append(errorFlag)
     }
+    
     function removeErrorFlag(input, inputWrapper){
         if(inputWrapper.querySelector(".error-flag")){inputWrapper.querySelector(".error-flag").remove()}
         inputWrapper.classList.remove("errorField")

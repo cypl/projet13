@@ -3,6 +3,7 @@ import { useSelector, useDispatch } from "react-redux"
 import { loggedIn } from "../store/loggerSlice"
 import { useNavigate } from "react-router"
 import { useFetchLoginUser } from "../api"
+import InputField from "../components/InputField"
 
 /**
  * Displays content elements from SignIn page. Child element of Logged.jsx (page).
@@ -19,8 +20,14 @@ function SignIn(){
     const[loginRemember, setLoginRemember] = useState(false)
     const[errorData, setErrorData] = useState(null)
     const[errorMessage, setErrorMessage] = useState("")
-    
+
     const navigate = useNavigate()
+
+    const [emailValid, setEmailValid] = useState(false)
+    const [passwordValid, setPasswordValid] = useState(false)
+
+    console.log(emailValid)
+    console.log(passwordValid)
 
     useEffect(() => {
         // Check if there is already a stored authentication token
@@ -35,14 +42,7 @@ function SignIn(){
     // eslint-disable-next-line react-hooks/exhaustive-deps
     },[])
 
-
     // form input functions
-    function handleLoginEmail(event){
-        setLoginEmail(event.target.value)
-    }
-    function handleLoginPassword(event){
-        setLoginPassword(event.target.value)
-    }
     function handleLoginRemember(){
         setLoginRemember(!loginRemember)
     }
@@ -90,20 +90,26 @@ function SignIn(){
                     <i className="fa fa-user-circle sign-in-icon"></i>
                     <h1>Sign In</h1>
                     <form className="sign-in-form" onSubmit={handleLoginSubmit}>
-                    <div className="input-wrapper">
-                        <label htmlFor="username">Username</label>
-                        <input type="text" id="username" onChange={handleLoginEmail}/>
-                    </div>
-                    <div className="input-wrapper">
-                        <label htmlFor="password">Password</label>
-                        <input type="password" id="password" onChange={handleLoginPassword}/>
-                    </div>
+                    <InputField 
+                        id={"email"} 
+                        label={"Email"} 
+                        type={"email"} 
+                        setData={setLoginEmail} 
+                        errorMessage={"Your email looks wrong."}
+                        setValid={setEmailValid}/>
+                    <InputField 
+                        id={"password"} 
+                        label={"Password"} 
+                        type={"password"} 
+                        setData={setLoginPassword} 
+                        errorMessage={"Your password looks wrong."}
+                        setValid={setPasswordValid}/>
                     <div className="input-remember">
                         <input type="checkbox" id="remember-me" checked={loginRemember} onChange={handleLoginRemember}/>
                         <label htmlFor="remember-me">Remember me</label>
                     </div>
-                     <button className="sign-in-button">Sign In</button>
-                     {errorData != null && 
+                    <button className={emailValid & passwordValid ? "sign-in-button" : "sign-in-button not-valid"}>Sign In</button>
+                    {errorData != null && 
                         <p className="sign-in-error-message">
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512">
                                 <path d="M182.6 137.4c-12.5-12.5-32.8-12.5-45.3 0l-128 128c-9.2 9.2-11.9 22.9-6.9 34.9s16.6 19.8 29.6 19.8H288c12.9 0 24.6-7.8 29.6-19.8s2.2-25.7-6.9-34.9l-128-128z"/>

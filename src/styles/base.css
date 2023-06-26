@@ -176,6 +176,10 @@ flex-direction: column;
     background-color: #00bc77;
     color: #fff;
   }
+  .sign-in-button.not-valid{
+    opacity:0.5;
+    pointer-events:none;
+  }
   
   .sign-in-error-message{
     box-sizing: border-box;
@@ -222,7 +226,7 @@ flex-direction: column;
     display: flex;
     flex-direction: column;
     text-align: left;
-    margin-bottom: 1rem;
+    margin-bottom: 1.4rem;
     position: relative;
   }
   
@@ -234,6 +238,21 @@ flex-direction: column;
     padding: 5px;
     font-size: 1.2rem;
     outline:none;
+  }
+
+  .input-showpassword-icon-wrapper{
+    height:16px;
+    width:22px;
+    right: 8px;
+    position: absolute;
+    bottom: 13px;
+    cursor: pointer;
+    }
+  .input-showpassword-icon{
+    margin:auto;
+    display:block;
+    fill:#78899a;
+    height:16px;
   }
   .input-wrapper input.error{
     border:2px solid rgb(253, 70, 70);
@@ -248,7 +267,6 @@ flex-direction: column;
     padding: 5px;
     z-index: 1;
   }
-  
   .footer {
     display: flex;
     justify-content: center;
