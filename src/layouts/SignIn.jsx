@@ -11,23 +11,23 @@ import InputField from "../components/InputField"
  */
 function SignIn(){
     const dispatch = useDispatch()
+    const navigate = useNavigate()
+    const { FetchLoginUser, data, isLoaded, isError } = useFetchLoginUser()
     const loggedUser = useSelector((state) => state.logger.isLoggedIn)
 
-    const { FetchLoginUser, data, isLoaded, isError } = useFetchLoginUser()
-
+    // store data from inputs
     const[loginEmail, setLoginEmail] = useState('')
     const[loginPassword, setLoginPassword] = useState('')
     const[loginRemember, setLoginRemember] = useState(false)
+
+    // in case API return error
     const[errorData, setErrorData] = useState(null)
     const[errorMessage, setErrorMessage] = useState("")
+    const [isErrorVisible, setIsErrorVisible] = useState(false)
 
-    const navigate = useNavigate()
-
+    // check if input fields are valid
     const [emailValid, setEmailValid] = useState(false)
     const [passwordValid, setPasswordValid] = useState(false)
-
-    console.log(emailValid)
-    console.log(passwordValid)
 
     useEffect(() => {
         // Check if there is already a stored authentication token
@@ -63,6 +63,7 @@ function SignIn(){
             else if(errorData.status === 404){setErrorMessage("Error connecting server.")}
             else if(errorData.status === 500){setErrorMessage("Internal Server Error.")}
             else{setErrorMessage("An error occured. Please, contact the support.")}
+            setIsErrorVisible(true)
         }
         if (isLoaded) { // when FetchLoginUser is finished
             // save error response (will be "null" if connection is OK)
@@ -79,8 +80,19 @@ function SignIn(){
             // if connection fails, an error pops in
             errorData != null && showErrorMessage(errorData)
         }
-      }, [data.token, dispatch, errorData, isError, isLoaded, loggedUser, loginEmail, loginRemember, navigate])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [data.token, dispatch, errorData, isError, isLoaded, loggedUser, loginRemember, navigate])
 
+    // add a setTimeOut on API error message
+    useEffect(() => {
+        if (isErrorVisible) {
+            const timeout = setTimeout(() => {
+                setIsErrorVisible(false);
+            }, 2000);
+    
+            return () => clearTimeout(timeout)
+        }
+    }, [isErrorVisible])
 
     return( 
         <> 
@@ -90,6 +102,7 @@ function SignIn(){
                     <i className="fa fa-user-circle sign-in-icon"></i>
                     <h1>Sign In</h1>
                     <form className="sign-in-form" onSubmit={handleLoginSubmit}>
+
                     <InputField 
                         id={"email"} 
                         label={"Email"} 
@@ -104,12 +117,15 @@ function SignIn(){
                         setData={setLoginPassword} 
                         errorMessage={"Your password looks wrong."}
                         setValid={setPasswordValid}/>
+
                     <div className="input-remember">
                         <input type="checkbox" id="remember-me" checked={loginRemember} onChange={handleLoginRemember}/>
                         <label htmlFor="remember-me">Remember me</label>
                     </div>
+                    
                     <button className={emailValid & passwordValid ? "sign-in-button" : "sign-in-button not-valid"}>Sign In</button>
-                    {errorData != null && 
+                    
+                    {isErrorVisible &&
                         <p className="sign-in-error-message">
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512">
                                 <path d="M182.6 137.4c-12.5-12.5-32.8-12.5-45.3 0l-128 128c-9.2 9.2-11.9 22.9-6.9 34.9s16.6 19.8 29.6 19.8H288c12.9 0 24.6-7.8 29.6-19.8s2.2-25.7-6.9-34.9l-128-128z"/>
