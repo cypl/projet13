@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useCallback } from 'react'
 import PropTypes from 'prop-types'
 
 function InputField({id, label, type, defaultValue, setData, errorMessage, setValid }){
@@ -7,35 +7,40 @@ function InputField({id, label, type, defaultValue, setData, errorMessage, setVa
     const [isInputEmpty, setIsInputEmpty] = useState(false)
     function togglePasswordVisibility() {
         setShowPassword(!showPassword)
-        }
+    }
 
-    function handleChange(event){
+    const handleChange = useCallback((event) => {
         const inputValue = event.target.value
         const regexText = /[^a-zA-ZÀ-ÿ\-']/g // used to find special characters
         const regexEmail = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/ // used to make sure of email string
-        function validateInput(regex, isEmpty) {
-            if (!isEmpty && !inputValue.match(regex)) {
-              setIsInputError(true)
-              setValid(false)
+        
+        if (type === 'email') {
+            if (!inputValue.match(regexEmail)) {
+                setIsInputError(true)
+                setValid(false)
             } else {
-              setIsInputError(false)
-              setValid(true)
-              setData(inputValue)
+                setIsInputError(false)
+                setValid(true)
+                setData(inputValue)
             }
-            setIsInputEmpty(isEmpty)
-          }
-      
-          if (type === 'email') {
-            validateInput(regexEmail, inputValue.length === 0)
-          } else if (type === 'password') {
+            setIsInputEmpty(inputValue.length === 0)
+        } else if (type === 'password') {
             setIsInputError(false)
             setIsInputEmpty(inputValue.length === 0)
             setValid(!(inputValue.length === 0))
             setData(inputValue)
-          } else {
-            validateInput(regexText, inputValue.length === 0)
-          }
-    }
+        } else {
+            if (inputValue.match(regexText)) {
+                setIsInputError(true)
+                setValid(false)
+            } else {
+                setIsInputError(false)
+                setValid(true)
+                setData(inputValue)
+            }
+            setIsInputEmpty(inputValue.length === 0)
+        }
+    },[setData, setValid, type])
     
     return (
         <div className="input-wrapper">
