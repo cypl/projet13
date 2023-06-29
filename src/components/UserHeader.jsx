@@ -1,9 +1,9 @@
 import { useState, useEffect } from 'react'
-import { validStringInput } from '../utils/validStringInput'
 import { useFetchChangeUserProfile } from '../api'
 import { getTokenFromStorage } from '../utils/getTokenFromStorage'
 import { useSelector, useDispatch } from "react-redux"
 import { setFirstName, setLastName } from '../store/profileSlice'
+import InputField from './InputField'
 
 /**
  * Displays the user name on profile page.
@@ -19,7 +19,6 @@ function UserHeader(){
     const [isModifying, setModifying] = useState(false)
     const [newFirstName, setNewFirstName] = useState()
     const [newLastName, setNewLastName] = useState()
-    const [errorCounts, setErrorCounts] = useState(0)
 
     // states used for Fetch hook :
     const[errorData, setErrorData] = useState(null)
@@ -27,14 +26,12 @@ function UserHeader(){
 
     function cancelModifying(){
         setModifying(false)
-        setErrorCounts(0)
     }
 
     useEffect(() => {
         setNewFirstName(firstName)
         setNewLastName(lastName)
     },[firstName, lastName])
-    
 
     async function handleSubmit(event){
         event.preventDefault()
@@ -60,9 +57,11 @@ function UserHeader(){
             errorData === null && setModifying(false)
             errorData != null && console.log(errorMessage)
         }
-      }, [data, dispatch, errorData, errorMessage, isError, isLoaded])
+    }, [data, dispatch, errorData, errorMessage, isError, isLoaded])
     
-    
+    // check if input fields are valid
+    const [firstNameValid, setFirstNameValid] = useState(true)
+    const [lastNameValid, setLastNameValid] = useState(true)
     
     return(
         <div className="header">
@@ -72,18 +71,29 @@ function UserHeader(){
                 ) : (
                 <form className="form_edit_profile" onSubmit={handleSubmit}>
                     <div className="form_edit_profile__group">
-                        <div className="input-wrapper">
-                            <label htmlFor="firstname">First name</label>
-                            <input type="text" id="firstname" defaultValue={firstName} 
-                            onChange={(event) => validStringInput(event, "text", setNewFirstName, setErrorCounts)}/>
-                        </div>
-                        <div className="input-wrapper">
-                            <label htmlFor="lastname">Last name</label>
-                            <input type="text" id="lastname" defaultValue={lastName} 
-                            onChange={(event) => validStringInput(event, "text", setNewLastName, setErrorCounts)}/>
-                        </div>
+
+                        <InputField 
+                            id={"firstname"} 
+                            label={"First name"} 
+                            type={"text"} 
+                            defaultValue={firstName}
+                            setData={setNewFirstName} 
+                            errorMessage={"Special characters are not allowed."}
+                            setValid={setFirstNameValid} 
+                        />
+
+                        <InputField 
+                            id={"lastname"} 
+                            label={"Last name"} 
+                            type={"text"} 
+                            defaultValue={lastName}
+                            setData={setNewLastName} 
+                            errorMessage={"Special characters are not allowed."}
+                            setValid={setLastNameValid} 
+                        />
+
                     </div>
-                    <button className={errorCounts > 0 ? "edit-button error" : "edit-button"}>Save changes</button>
+                    <button className={firstNameValid & lastNameValid ? "edit-button" : "edit-button not-valid"}>Save changes</button>
                     <p className="form_edit_profile__cancel"><span onClick={() => cancelModifying()}>Cancel</span></p>
                 </form>
                 )

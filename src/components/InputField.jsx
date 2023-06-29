@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import PropTypes from 'prop-types'
 
-function InputField({id, label, type, setData, errorMessage, setValid }){
+function InputField({id, label, type, defaultValue, setData, errorMessage, setValid }){
     const [showPassword, setShowPassword] = useState(false)
     const [isInputError, setIsInputError] = useState(false)
     const [isInputEmpty, setIsInputEmpty] = useState(false)
@@ -10,45 +10,37 @@ function InputField({id, label, type, setData, errorMessage, setValid }){
         }
 
     function handleChange(event){
-        const regexText = /[^a-zA-ZÀ-ÿ\-']/g
-        const regexEmail = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/
-        function checkValue(regex){
-            if(!event.target.value.match(regex) && event.target.value.length > 0){
-                setIsInputError(true)
-                setIsInputEmpty(false)
-                setValid(false)
-            } else if(!event.target.value.match(regex) && event.target.value.length === 0) {
-                setIsInputError(true)
-                setIsInputEmpty(true)
-                setValid(false)
+        const inputValue = event.target.value
+        const regexText = /[^a-zA-ZÀ-ÿ\-']/g // used to find special characters
+        const regexEmail = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/ // used to make sure of email string
+        function validateInput(regex, isEmpty) {
+            if (!isEmpty && !inputValue.match(regex)) {
+              setIsInputError(true)
+              setValid(false)
             } else {
-                setIsInputError(false)
-                setIsInputEmpty(false)
-                setValid(true)
-                setData(event.target.value)
+              setIsInputError(false)
+              setValid(true)
+              setData(inputValue)
             }
-        }
-        if (type === "email"){
-            checkValue(regexEmail)
-        } else if(type === "password"){
-            // ...for password, we only check if empty
-            if(event.target.value.length === 0) {
-                setIsInputEmpty(true)
-                setValid(false)
-            } else {
-                setIsInputEmpty(false)
-                setValid(true)
-                setData(event.target.value)
-            }
-        } else {
-            checkValue(regexText)
-        }
+            setIsInputEmpty(isEmpty)
+          }
+      
+          if (type === 'email') {
+            validateInput(regexEmail, inputValue.length === 0)
+          } else if (type === 'password') {
+            setIsInputError(false)
+            setIsInputEmpty(inputValue.length === 0)
+            setValid(!(inputValue.length === 0))
+            setData(inputValue)
+          } else {
+            validateInput(regexText, inputValue.length === 0)
+          }
     }
     
     return (
         <div className="input-wrapper">
             <label htmlFor={id}>{label}</label>
-            <input type={showPassword ? "text" : type} id={id} className={isInputError || isInputEmpty ? "error" : ""} onChange={(event) => handleChange(event, type)}/>
+            <input type={showPassword ? "text" : type} id={id} className={isInputError || isInputEmpty ? "error" : ""} defaultValue={defaultValue ? defaultValue : ""} onChange={handleChange}/>
             {isInputError && !isInputEmpty && <span className="error-flag">{errorMessage}</span>}
             {isInputEmpty && <span className="error-flag">This should not be empty.</span>}
             
@@ -72,6 +64,7 @@ InputField.propTypes = {
     id: PropTypes.string,
     label: PropTypes.string,
     type: PropTypes.string,
+    defaultValue: PropTypes.string,
     setData: PropTypes.func,
     errorMessage: PropTypes.string,
     setValid: PropTypes.func,

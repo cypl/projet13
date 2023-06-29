@@ -324,7 +324,7 @@ flex-direction: column;
     padding: 10px;
     cursor:pointer;
   }
-  .edit-button.error{
+  .edit-button.not-valid{
     opacity:0.5;
     pointer-events:none;
   }
