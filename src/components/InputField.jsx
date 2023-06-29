@@ -5,6 +5,7 @@ function InputField({id, label, type, defaultValue, setData, errorMessage, setVa
     const [showPassword, setShowPassword] = useState(false)
     const [isInputError, setIsInputError] = useState(false)
     const [isInputEmpty, setIsInputEmpty] = useState(false)
+    
     function togglePasswordVisibility() {
         setShowPassword(!showPassword)
     }
